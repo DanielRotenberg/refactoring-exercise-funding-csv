@@ -1,7 +1,10 @@
 package com.acme.interviews;
 
 import java.util.*;
+
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -11,7 +14,12 @@ public class FundingRaised {
         CSVReader reader = new CSVReader(new FileReader("startup_funding.csv"));
         String[] row = null;
 
-        while((row = reader.readNext()) != null) {
+        while(true) {
+            try {
+                if (!((row = reader.readNext()) != null)) break;
+            } catch (CsvValidationException e) {
+                throw new RuntimeException(e);
+            }
             csvData.add(row);
         }
 
@@ -87,7 +95,12 @@ public class FundingRaised {
         CSVReader reader = new CSVReader(new FileReader("startup_funding.csv"));
         String[] row = null;
 
-        while((row = reader.readNext()) != null) {
+        while(true) {
+            try {
+                if (!((row = reader.readNext()) != null)) break;
+            } catch (CsvValidationException e) {
+                throw new RuntimeException(e);
+            }
             csvData.add(row);
         }
 
@@ -183,4 +196,3 @@ public class FundingRaised {
     }
 }
 
-class NoSuchEntryException extends Exception {}
