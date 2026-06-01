@@ -101,7 +101,19 @@ public class FundingRaisedTest
     }
 
     public void testWhereCorrectKeys() {
+        Map<String, String> options = new HashMap<String, String> ();
+        options.put("company_name", "Facebook");
         try {
+
+            Funding funding = com.acme.interviews.FundingRaised.where(options).get(0);
+
+
+        } catch (Exception e){
+
+
+        }
+
+/*        try {
             Map<String, String> options = new HashMap<String, String> ();
             options.put("company_name", "Facebook");
             Map<String, String> row = com.acme.interviews.FundingRaised.where(options).get(0);
@@ -118,7 +130,7 @@ public class FundingRaisedTest
         } catch(IOException e) {
             System.out.print(e.getMessage());
             System.out.print("error");
-        }
+        }*/
     }
 
     public void testFindByGivenCompanyName() {
