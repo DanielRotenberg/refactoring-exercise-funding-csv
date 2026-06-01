@@ -1,222 +1,211 @@
-package com.acme.interviews;
-import java.util.*;
-import java.io.IOException;
+package com.acme.interviews
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import com.acme.interviews.FundingRaised.findBy
+import com.acme.interviews.FundingRaised.where
+import junit.framework.Assert
+import junit.framework.Test
+import junit.framework.TestCase
+import junit.framework.TestSuite
+import java.io.IOException
 
 /**
  * Unit test for simple App.
  */
-public class FundingRaisedTest
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public FundingRaisedTest ( String testName )
-    {
-        super( testName );
-    }
+class FundingRaisedTest
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( FundingRaisedTest.class );
-    }
-
+/**
+ * Create the test case
+ * 
+ * @param testName name of the test case
+ */
+    (testName: String?) : TestCase(testName) {
     /**
      * Rigourous Test :-)
      */
-    public void testWhereGivenCompany() {
+    fun testWhereGivenCompany() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "Facebook");
-            assertEquals(FundingRaised.where(options).size(), 7);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("company_name", "Facebook")
+            Assert.assertEquals(where(options).size, 7)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testWhereGivenCity() {
+    fun testWhereGivenCity() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("city", "Tempe");
-            assertEquals(com.acme.interviews.FundingRaised.where(options).size(), 3);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("city", "Tempe")
+            Assert.assertEquals(where(options).size, 3)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testWhereGivenState() {
+    fun testWhereGivenState() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("state", "CA");
-            assertEquals(com.acme.interviews.FundingRaised.where(options).size(), 873);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("state", "CA")
+            Assert.assertEquals(where(options).size, 873)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testWhereGivenRound() {
+    fun testWhereGivenRound() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("round", "a");
-            assertEquals(com.acme.interviews.FundingRaised.where(options).size(), 582);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("round", "a")
+            Assert.assertEquals(where(options).size, 582)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testMultipleOptions() {
+    fun testMultipleOptions() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("round", "a");
-            options.put("company_name", "Facebook");
-            assertEquals(com.acme.interviews.FundingRaised.where(options).size(), 1);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("round", "a")
+            options.put("company_name", "Facebook")
+            Assert.assertEquals(where(options).size, 1)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testWhereNotExists() {
+    fun testWhereNotExists() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "NotFacebook");
-            assertEquals(com.acme.interviews.FundingRaised.where(options).size(), 0);
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("company_name", "NotFacebook")
+            Assert.assertEquals(where(options).size, 0)
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testWhereCorrectKeys() {
-        Map<String, String> options = new HashMap<String, String> ();
-        options.put("company_name", "Facebook");
+    fun Funding.valueFor(key:String) = details.find { it.name == key }!!.value
+
+    fun testWhereCorrectKeys() {
+        val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+        options.put("company_name", "Facebook")
         try {
+            val funding: Funding = where(options)[0]
+            assertEquals(funding.valueFor("permalink"), "facebook");
+            assertEquals(funding.valueFor("company_name"), "Facebook");
+            assertEquals(funding.valueFor("number_employees"), "450");
+            assertEquals(funding.valueFor("category"), "web");
+            assertEquals(funding.valueFor("city"), "Palo Alto");
+            assertEquals(funding.valueFor("state"), "CA");
+            assertEquals(funding.valueFor("funded_date"), "1-Sep-04");
+            assertEquals(funding.valueFor("raised_amount"), "500000");
+            assertEquals(funding.valueFor("round"), "angel");
 
-            Funding funding = com.acme.interviews.FundingRaised.where(options).get(0);
-
-
-        } catch (Exception e){
-
-
+        } catch (e: IOException) {
+            print(e.message);
+            print("error");
         }
 
-/*        try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "Facebook");
-            Map<String, String> row = com.acme.interviews.FundingRaised.where(options).get(0);
-
-            assertEquals(row.get("permalink"), "facebook");
-            assertEquals(row.get("company_name"), "Facebook");
-            assertEquals(row.get("number_employees"), "450");
-            assertEquals(row.get("category"), "web");
-            assertEquals(row.get("city"), "Palo Alto");
-            assertEquals(row.get("state"), "CA");
-            assertEquals(row.get("funded_date"), "1-Sep-04");
-            assertEquals(row.get("raised_amount"), "500000");
-            assertEquals(row.get("round"), "angel");
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
-        }*/
     }
 
-    public void testFindByGivenCompanyName() {
+    fun testFindByGivenCompanyName() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "Facebook");
-            Map<String, String> row = com.acme.interviews.FundingRaised.findBy(options);
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("company_name", "Facebook")
+            val row = findBy(options)
 
-            assertEquals(row.get("permalink"), "facebook");
-            assertEquals(row.get("company_name"), "Facebook");
-            assertEquals(row.get("number_employees"), "450");
-            assertEquals(row.get("category"), "web");
-            assertEquals(row.get("city"), "Palo Alto");
-            assertEquals(row.get("state"), "CA");
-            assertEquals(row.get("funded_date"), "1-Sep-04");
-            assertEquals(row.get("raised_amount"), "500000");
-            assertEquals(row.get("round"), "angel");
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
-        } catch(com.acme.interviews.NoSuchEntryException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            Assert.assertEquals(row.get("permalink"), "facebook")
+            Assert.assertEquals(row.get("company_name"), "Facebook")
+            Assert.assertEquals(row.get("number_employees"), "450")
+            Assert.assertEquals(row.get("category"), "web")
+            Assert.assertEquals(row.get("city"), "Palo Alto")
+            Assert.assertEquals(row.get("state"), "CA")
+            Assert.assertEquals(row.get("funded_date"), "1-Sep-04")
+            Assert.assertEquals(row.get("raised_amount"), "500000")
+            Assert.assertEquals(row.get("round"), "angel")
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
+        } catch (e: NoSuchEntryException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testFindByGivenState() {
+    fun testFindByGivenState() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("state", "CA");
-            Map<String, String> row = com.acme.interviews.FundingRaised.findBy(options);
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("state", "CA")
+            val row = findBy(options)
 
-            assertEquals(row.get("permalink"), "digg");
-            assertEquals(row.get("company_name"), "Digg");
-            assertEquals(row.get("number_employees"), "60");
-            assertEquals(row.get("category"), "web");
-            assertEquals(row.get("city"), "San Francisco");
-            assertEquals(row.get("state"), "CA");
-            assertEquals(row.get("funded_date"), "1-Dec-06");
-            assertEquals(row.get("raised_amount"), "8500000");
-            assertEquals(row.get("round"), "b");
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
-        } catch(com.acme.interviews.NoSuchEntryException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            Assert.assertEquals(row.get("permalink"), "digg")
+            Assert.assertEquals(row.get("company_name"), "Digg")
+            Assert.assertEquals(row.get("number_employees"), "60")
+            Assert.assertEquals(row.get("category"), "web")
+            Assert.assertEquals(row.get("city"), "San Francisco")
+            Assert.assertEquals(row.get("state"), "CA")
+            Assert.assertEquals(row.get("funded_date"), "1-Dec-06")
+            Assert.assertEquals(row.get("raised_amount"), "8500000")
+            Assert.assertEquals(row.get("round"), "b")
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
+        } catch (e: NoSuchEntryException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testFindByMultipleOptions() {
+    fun testFindByMultipleOptions() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "Facebook");
-            options.put("round", "c");
-            Map<String, String> row = com.acme.interviews.FundingRaised.findBy(options);
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("company_name", "Facebook")
+            options.put("round", "c")
+            val row = findBy(options)
 
-            assertEquals(row.get("permalink"), "facebook");
-            assertEquals(row.get("company_name"), "Facebook");
-            assertEquals(row.get("number_employees"), "450");
-            assertEquals(row.get("category"), "web");
-            assertEquals(row.get("city"), "Palo Alto");
-            assertEquals(row.get("state"), "CA");
-            assertEquals(row.get("funded_date"), "1-Oct-07");
-            assertEquals(row.get("raised_amount"), "300000000");
-            assertEquals(row.get("round"), "c");
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
-        } catch(com.acme.interviews.NoSuchEntryException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
+            Assert.assertEquals(row.get("permalink"), "facebook")
+            Assert.assertEquals(row.get("company_name"), "Facebook")
+            Assert.assertEquals(row.get("number_employees"), "450")
+            Assert.assertEquals(row.get("category"), "web")
+            Assert.assertEquals(row.get("city"), "Palo Alto")
+            Assert.assertEquals(row.get("state"), "CA")
+            Assert.assertEquals(row.get("funded_date"), "1-Oct-07")
+            Assert.assertEquals(row.get("raised_amount"), "300000000")
+            Assert.assertEquals(row.get("round"), "c")
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
+        } catch (e: NoSuchEntryException) {
+            print(e.message)
+            print("error")
         }
     }
 
-    public void testFindByNotExists() {
+    fun testFindByNotExists() {
         try {
-            Map<String, String> options = new HashMap<String, String> ();
-            options.put("company_name", "NotFacebook");
-            options.put("round", "c");
-            Map<String, String> row = com.acme.interviews.FundingRaised.findBy(options);
-            fail("findBy should throw exception");
-        } catch(IOException e) {
-            System.out.print(e.getMessage());
-            System.out.print("error");
-        } catch(com.acme.interviews.NoSuchEntryException e) {
+            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+            options.put("company_name", "NotFacebook")
+            options.put("round", "c")
+            val row = findBy(options)
+            fail("findBy should throw exception")
+        } catch (e: IOException) {
+            print(e.message)
+            print("error")
+        } catch (e: NoSuchEntryException) {
+        }
+    }
+
+    companion object {
+        /**
+         * @return the suite of tests being tested
+         */
+        fun suite(): Test {
+            return TestSuite(FundingRaisedTest::class.java)
         }
     }
 }
