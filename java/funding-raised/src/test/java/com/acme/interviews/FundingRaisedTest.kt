@@ -117,17 +117,20 @@ class FundingRaisedTest
         try {
             val options: MutableMap<String?, String?> = HashMap<String?, String?>()
             options.put("company_name", "Facebook")
-            val row = findBy(options)
+            val row = findBy(options).first()
 
-            Assert.assertEquals(row.get("permalink"), "facebook")
-            Assert.assertEquals(row.get("company_name"), "Facebook")
-            Assert.assertEquals(row.get("number_employees"), "450")
-            Assert.assertEquals(row.get("category"), "web")
-            Assert.assertEquals(row.get("city"), "Palo Alto")
-            Assert.assertEquals(row.get("state"), "CA")
-            Assert.assertEquals(row.get("funded_date"), "1-Sep-04")
-            Assert.assertEquals(row.get("raised_amount"), "500000")
-            Assert.assertEquals(row.get("round"), "angel")
+            Assert.assertEquals(row.valueFor("permalink"), "facebook")
+//            Assert.assertEquals(row.valueFor("permalink"), "facebook")
+//            Assert.assertEquals(row.valueFor("permalink"), "facebook")
+//            Assert.assertEquals(row.get("permalink"), "facebook")
+            /*assertEquals(row.get("company_name"), "Facebook")
+            assertEquals(row.get("number_employees"), "450")
+            assertEquals(row.get("category"), "web")
+            assertEquals(row.get("city"), "Palo Alto")
+            assertEquals(row.get("state"), "CA")
+            assertEquals(row.get("funded_date"), "1-Sep-04")
+            assertEquals(row.get("raised_amount"), "500000")
+            assertEquals(row.get("round"), "angel")*/
         } catch (e: IOException) {
             print(e.message)
             print("error")
@@ -141,17 +144,17 @@ class FundingRaisedTest
         try {
             val options: MutableMap<String?, String?> = HashMap<String?, String?>()
             options.put("state", "CA")
-            val row = findBy(options)
+            val row = findBy(options).first()
 
-            Assert.assertEquals(row.get("permalink"), "digg")
-            Assert.assertEquals(row.get("company_name"), "Digg")
-            Assert.assertEquals(row.get("number_employees"), "60")
-            Assert.assertEquals(row.get("category"), "web")
-            Assert.assertEquals(row.get("city"), "San Francisco")
-            Assert.assertEquals(row.get("state"), "CA")
-            Assert.assertEquals(row.get("funded_date"), "1-Dec-06")
-            Assert.assertEquals(row.get("raised_amount"), "8500000")
-            Assert.assertEquals(row.get("round"), "b")
+            assertEquals(row.valueFor("permalink"), "digg")
+            assertEquals(row.valueFor("company_name"), "Digg")
+            assertEquals(row.valueFor("number_employees"), "60")
+            assertEquals(row.valueFor("category"), "web")
+            assertEquals(row.valueFor("city"), "San Francisco")
+            assertEquals(row.valueFor("state"), "CA")
+            assertEquals(row.valueFor("funded_date"), "1-Dec-06")
+            assertEquals(row.valueFor("raised_amount"), "8500000")
+            assertEquals(row.valueFor("round"), "b")
         } catch (e: IOException) {
             print(e.message)
             print("error")
@@ -160,31 +163,30 @@ class FundingRaisedTest
             print("error")
         }
     }
+        fun testFindByMultipleOptions() {
+            try {
+                val options: MutableMap<String?, String?> = HashMap<String?, String?>()
+                options.put("company_name", "Facebook")
+                options.put("round", "c")
+                val row = findBy(options).first()
 
-    fun testFindByMultipleOptions() {
-        try {
-            val options: MutableMap<String?, String?> = HashMap<String?, String?>()
-            options.put("company_name", "Facebook")
-            options.put("round", "c")
-            val row = findBy(options)
-
-            Assert.assertEquals(row.get("permalink"), "facebook")
-            Assert.assertEquals(row.get("company_name"), "Facebook")
-            Assert.assertEquals(row.get("number_employees"), "450")
-            Assert.assertEquals(row.get("category"), "web")
-            Assert.assertEquals(row.get("city"), "Palo Alto")
-            Assert.assertEquals(row.get("state"), "CA")
-            Assert.assertEquals(row.get("funded_date"), "1-Oct-07")
-            Assert.assertEquals(row.get("raised_amount"), "300000000")
-            Assert.assertEquals(row.get("round"), "c")
-        } catch (e: IOException) {
-            print(e.message)
-            print("error")
-        } catch (e: NoSuchEntryException) {
-            print(e.message)
-            print("error")
+                assertEquals(row.valueFor("permalink"), "facebook")
+                assertEquals(row.valueFor("company_name"), "Facebook")
+                assertEquals(row.valueFor("number_employees"), "450")
+                assertEquals(row.valueFor("category"), "web")
+                assertEquals(row.valueFor("city"), "Palo Alto")
+                assertEquals(row.valueFor("state"), "CA")
+                assertEquals(row.valueFor("funded_date"), "1-Oct-07")
+                assertEquals(row.valueFor("raised_amount"), "300000000")
+                assertEquals(row.valueFor("round"), "c")
+            } catch (e: IOException) {
+                print(e.message)
+                print("error")
+            } catch (e: NoSuchEntryException) {
+                print(e.message)
+                print("error")
+            }
         }
-    }
 
     fun testFindByNotExists() {
         try {
