@@ -8,20 +8,16 @@ object FundingRaised {
     @JvmStatic
     @Throws(IOException::class)
     fun where(options: MutableMap<String?, String?>): List<Funding> {
-        /*  var csvData: MutableList<Array<String?>?> = ArrayList<Array<String?>?>()
-          CSVReader(FileReader("startup_funding.csv")).readAll().forEach {
-              it.forEach { print(it) }
-              println()
-          }*/
+
         val csvReader = CSVReader(FileReader("startup_funding.csv"))
 
-        return csvReader.readAll().drop(1).newDataFor(options)
+        return csvReader.readAll().drop(1).matchingFundsFor(options)
 
     }
 
     @JvmStatic
     @Throws(IOException::class, NoSuchEntryException::class)
-    fun findBy(options: MutableMap<String?, String?>): List<Funding> {//MutableMap<String?, String?> {
+    fun findBy(options: MutableMap<String?, String?>): List<Funding> {
         return where(options).ifEmpty { throw NoSuchEntryException() }
     }
 
@@ -40,107 +36,54 @@ object FundingRaised {
 }
 
 
-private fun MutableList<Array<String?>?>.convertToMap(): List<MutableMap<String?, String?>?> {
-    return map {
-        it.toMap()
-    }
-
-}
-
-private fun Array<String?>?.toMap(): MutableMap<String?, String?> {
-    val mapped: MutableMap<String?, String?> = HashMap<String?, String?>()
-    mapped.put("permalink", this!![0])
-    mapped.put("company_name", this!![1])
-    mapped.put("number_employees", this!![2])
-    mapped.put("category", this!![3])
-    mapped.put("city", this!![4])
-    mapped.put("state", this!![5])
-    mapped.put("funded_date", this!![6])
-    mapped.put("raised_amount", this!![7])
-    mapped.put("raised_currency", this!![8])
-    mapped.put("round", this!![9])
-    return mapped
-}
-
-
-// convert array to columns
-// Fund (list of columns)
-
-private fun List<Array<String?>?>.newDataFor(
-    options: MutableMap<String?, String?>, // user data to look for
+private fun List<Array<String?>?>.matchingFundsFor(
+    options: MutableMap<String?, String?>
 ): List<Funding> {
-    val listThatHaveListOfColumns: List<List<FundingDetail>> = map { it!!.rawDataToColumns() }
-    val listOfFunding: List<Funding> = listThatHaveListOfColumns.map { Funding(it) }
+    val funding: List<Funding> = map { it!!.rawDataToFunding() }
 
     val res: List<FundingDetail> = options.map { (column, value) ->
-        FundingDetail(name = column!!, value = value!!)
+        FundingDetail( column!!, value!!)
     }
 
-    val funding = listOfFunding.filter { funding ->
+    return funding.filter { funding ->
         funding.details.containsAll(res)
     }
 
-    return funding
+}
+
+
+
+fun Array<String?>.rawDataToFunding(): Funding {
+    // convert to enum?
+ val fundingDetails =  listOf(FundingDetail("permalink",get(0)!!),
+     FundingDetail("company_name", get(1)!!),
+         FundingDetail("number_employees", get(2)!!),
+         FundingDetail("category", get(3)!!),
+         FundingDetail("city", get(4)!!),
+         FundingDetail("state", get(5)!!),
+         FundingDetail("funded_date", get(6)!!),
+         FundingDetail("raised_amount", get(7)!!),
+         FundingDetail("raised_currency", get(8)!!),
+         FundingDetail("round", get(9)!!)
+    )
+
+    return Funding(fundingDetails)
 
 }
-/**
- * [lifelock, LifeLock, , web, Tempe, AZ, 1-May-07, 6850000, USD, b]
- * [lifelock, LifeLock, , web, Tempe, AZ, 1-Oct-06, 6000000, USD, a]
- *
- *  table with header
- *  stock (....)
- *  stock (....)
- *
- */
-
-// if map of details contains the column we're looking for then iterate over the list
-// we need all data in the map to be correct
-
-
-data class Column(val name: String, val index: Int)
 
 data class Funding(val details: List<FundingDetail>)
 
 data class FundingDetail(val name: String, val value: String)
 
-fun Array<String?>.rawDataToColumns(): List<FundingDetail> {
-    val permalink = get(0)
-    val company_name = get(1)
-    val number_employees = get(2)
-    val category = get(3)
-    val city = get(4)
-    val state = get(5)
-    val funded_date = get(6)
-    val raised_amount = get(7)
-    val raised_currency = get(8)
-    val round = get(9)
-
-    return buildList {
-        add(FundingDetail("permalink", permalink!!))
-        add(FundingDetail("company_name", company_name!!))
-        add(FundingDetail("number_employees", number_employees!!))
-        add(FundingDetail("category", category!!))
-        add(FundingDetail("city", city!!))
-        add(FundingDetail("state", state!!))
-        add(FundingDetail("funded_date", funded_date!!))
-        add(FundingDetail("raised_amount", raised_amount!!))
-        add(FundingDetail("raised_currency", raised_currency!!))
-        add(FundingDetail("round", round!!))
-    }
-
+enum class FundingDetailType(val detailName: String, val index: Int) {
+    PERMALINK("permalink", 0),
+    COMPANY_NAME("company_name", 1),
+    NUMBER_EMPLOYEES("number_employees", 2),
+    CATEGORY("category", 3),
+    CITY("city", 4),
+    STATE("state", 5),
+    FUNDED_DATE("funded_date", 6),
+    RAISED_AMOUNT("raised_amount", 7),
+    RAISED_CURRENCY("raised_currency", 8),
+    ROUND("round", 9)
 }
-
-
-val columns = listOf(
-    Column("permalink", 0),
-    Column("company_name", 1),
-    Column("number_employees", 2),
-    Column("category", 3),
-    Column("city", 4),
-    Column("state", 5),
-    Column("funded_date", 6),
-    Column("raised_amount", 7),
-    Column("raised_currency", 8),
-    Column("round", 9),
-)
-
